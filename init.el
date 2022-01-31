@@ -9,9 +9,29 @@
 ;;custom shorcut
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
+;; setup MELPA
+(require 'package)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+			 ("org" . "https://orgmode.elpa/")
+			 ("elpa" . "https://elpa.gnu.org/packages/")))
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+
+;; Initialize use-package on non-linux platforms
+(unless (package-installed-p 'use-package)
+ (package-install 'use-package))
+
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+
 ;;change font & theme
 (set-face-attribute 'default nil :font "FiraCode NF" :height 120)
+
+(use-package nord-theme)
 (load-theme 'nord)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -28,21 +48,7 @@
  ;; If there is more than one, they won't work right.
  )
 
-;; setup MELPA
-(require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("org" . "https://orgmode.elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
 
-;; Initialize use-package on non-linux platforms
-(unless (package-installed-p 'use-package)
- (package-install 'use-package))
-
-(require 'use-package)
-(setq use-package-always-ensure t)
 
 :(use-package command-log-mode)
 
