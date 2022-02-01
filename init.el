@@ -48,7 +48,7 @@
  '(custom-safe-themes
    '("37768a79b479684b0756dec7c0fc7652082910c37d8863c35b702db3f16000f8" default))
  '(package-selected-packages
-   '(visual-fill-column org-bullets org-mode lsp-mode helm which-key rainbow-delimiters doom-modeline use-package nord-theme ivy command-log-mode)))
+   '(lsp-jedi lsp-python-ms pippel visual-fill-column org-bullets org-mode lsp-mode helm which-key rainbow-delimiters doom-modeline use-package nord-theme ivy command-log-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -79,6 +79,7 @@
 
 ;; Developpement
 
+(use-package pippel)
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :init
@@ -86,7 +87,12 @@
   :config
   (lsp-enable-which-key-integration t))
 
-
+(use-package lsp-jedi
+  :ensure t
+  :config
+  (with-eval-after-load "lsp-mode"
+    (add-to-list 'lsp-disabled-clients 'pyls)
+    (add-to-list 'lsp-enabled-clients 'jedi)))
 
 ;; org setup
 
