@@ -48,10 +48,6 @@
  ;; If there is more than one, they won't work right.
  )
 
-
-
-:(use-package command-log-mode)
-
 (use-package ivy
   :diminish
   :bind (("C-s" . swiper)
