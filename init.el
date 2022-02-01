@@ -27,6 +27,10 @@
 (setq use-package-always-ensure t)
 
 
+;; setup helm
+;;(use-package helm)
+
+
 ;;change font & theme
 (use-package all-the-icons
   :if (display-graphic-p))
@@ -44,7 +48,7 @@
  '(custom-safe-themes
    '("37768a79b479684b0756dec7c0fc7652082910c37d8863c35b702db3f16000f8" default))
  '(package-selected-packages
-   '(which-key rainbow-delimiters doom-modeline use-package nord-theme ivy command-log-mode)))
+   '(lsp-mode helm which-key rainbow-delimiters doom-modeline use-package nord-theme ivy command-log-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -72,3 +76,10 @@
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.3))
+
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :config
+  (lsp-enable-which-key-integration t))
