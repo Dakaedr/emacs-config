@@ -6,6 +6,7 @@
 (menu-bar-mode -1)
 (setq visible-bell t)
 (setq inhibit-startup-message -1)
+
 ;;custom shorcut
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
@@ -33,7 +34,7 @@
 (set-face-attribute 'default nil :font "FiraCode NF" :height 120)
 
 (use-package nord-theme)
-(load-theme 'nord)
+(load-theme 'nord t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -43,7 +44,7 @@
  '(custom-safe-themes
    '("37768a79b479684b0756dec7c0fc7652082910c37d8863c35b702db3f16000f8" default))
  '(package-selected-packages
-   '(doom-modeline use-package nord-theme ivy command-log-mode)))
+   '(which-key rainbow-delimiters doom-modeline use-package nord-theme ivy command-log-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -51,7 +52,23 @@
  ;; If there is more than one, they won't work right.
  )
 
-
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1))
+
+;; Some useful editor config
+(column-number-mode)
+(global-display-line-numbers-mode t)
+(dolist (mode '(org-mode-hook
+		term-mode-hook
+		eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 0.3))
