@@ -77,12 +77,18 @@
   :config
   (setq which-key-idle-delay 0.3))
 
+;; Developpement
+
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :init
   (setq lsp-keymap-prefix "C-c l")
   :config
   (lsp-enable-which-key-integration t))
+
+
+
+;; org setup
 
 (defun dw/org-mode-setup ()
   (org-indent-mode)
