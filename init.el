@@ -7,6 +7,31 @@
 (setq visible-bell t)
 (setq inhibit-startup-message -1)
 
+;;##############################################
+;;  special function  
+;;##############################################
+(defun keyboard-escape-buffer-magic ()
+  "Exit the current \"mode\" (in a generalized sense of the word).
+This command can exit an interactive command such as `query-replace',
+can clear out a prefix argument or a region,
+can get out of the minibuffer or other recursive edit,
+cancel the use of the current buffer (for special-purpose buffers)."
+  (interactive)
+  (cond ((eq last-command 'mode-exited) nil)
+	((region-active-p)
+	 (deactivate-mark))
+	((> (minibuffer-depth) 0)
+	 (abort-recursive-edit))
+	(current-prefix-arg
+	 nil)
+	((> (recursion-depth) 0)
+	 (exit-recursive-edit))
+	(buffer-quit-function
+	 (funcall buffer-quit-function))
+	((string-match "^ \\*" (buffer-name (current-buffer)))
+	 (bury-buffer))))
+
+
 ;; init.el find function
 (defun open-init-file ()
   "Open the init file."
@@ -19,7 +44,7 @@
 
 
 ;;custom shorcut
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(global-set-key (kbd "<escape>") 'keyboard-escape-buffer-magic)
 (define-prefix-command 'open-short)
 (global-set-key (kbd "C-o") 'open-short)
 (global-set-key (kbd "C-o d") 'open-org-dir)
