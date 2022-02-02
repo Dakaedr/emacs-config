@@ -8,14 +8,22 @@
 (setq inhibit-startup-message -1)
 
 ;; init.el find function
-(defun my-open-init-file ()
+(defun open-init-file ()
   "Open the init file."
   (interactive)
   (find-file user-init-file))
+(defun open-org-dir ()
+  "Open the org directory in dired."
+  (interactive)
+  (dired "~/.emacs.d/org/"))
 
 
 ;;custom shorcut
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(define-prefix-command 'open-short)
+(global-set-key (kbd "C-o") 'open-short)
+(global-set-key (kbd "C-o d") 'open-org-dir)
+(global-set-key (kbd "C-o f") 'open-init-file)
 
 ;; setup MELPA
 (require 'package)
