@@ -7,6 +7,13 @@
 (setq visible-bell t)
 (setq inhibit-startup-message -1)
 
+;; init.el find function
+(defun my-open-init-file ()
+  "Open the init file."
+  (interactive)
+  (find-file user-init-file))
+
+
 ;;custom shorcut
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
