@@ -41,6 +41,10 @@ cancel the use of the current buffer (for special-purpose buffers)."
   "Open the org directory in dired."
   (interactive)
   (dired "~/.emacs.d/org/"))
+(defun open-org-todo ()
+  "Open my daily todolist."
+  (interactive)
+  (find-file "~/.emacs.d/org/todo.org"))
 
 
 ;;custom shorcut
@@ -49,6 +53,7 @@ cancel the use of the current buffer (for special-purpose buffers)."
 (global-set-key (kbd "C-o") 'open-short)
 (global-set-key (kbd "C-o d") 'open-org-dir)
 (global-set-key (kbd "C-o f") 'open-init-file)
+(global-set-key (kbd "C-o t") 'open-org-todo)
 
 ;; setup MELPA
 (require 'package)
