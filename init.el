@@ -118,7 +118,6 @@ cancel the use of the current buffer (for special-purpose buffers)."
   :config
   (setq which-key-idle-delay 0.3))
 
-
 ;; Developpement
 
 (use-package pippel)
