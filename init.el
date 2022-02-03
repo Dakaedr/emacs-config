@@ -48,12 +48,20 @@ cancel the use of the current buffer (for special-purpose buffers)."
 
 
 ;;custom shorcut
-(global-set-key (kbd "<escape>") 'keyboard-escape-buffer-magic)
-(define-prefix-command 'open-short)
-(global-set-key (kbd "C-o") 'open-short)
-(global-set-key (kbd "C-o d") 'open-org-dir)
-(global-set-key (kbd "C-o f") 'open-init-file)
-(global-set-key (kbd "C-o t") 'open-org-todo)
+(global-set-key (kbd "<escape>") 'keyboard-escape-buffer-magic) ; Use escape instead of C-g
+(define-prefix-command 'open-short) ; Generate a command for prefix 
+(global-set-key (kbd "C-o") 'open-short) ; Assign C-o as prefix 
+(global-set-key (kbd "C-o d") 'open-org-dir) ; Open my org file dir
+(global-set-key (kbd "C-o f") 'open-init-file) ; Open my init.el
+(global-set-key (kbd "C-o t") 'open-org-todo) ; Open my todolist
+
+(define-prefix-command 'move-short) ; Generate a command for prefix 
+(global-set-key (kbd "C-<") 'move-short) ; Assign C-< as prefix 
+(global-set-key (kbd "C-< <up>") 'windmove-up); move up
+(global-set-key (kbd "C-< <down>") 'windmove-down); move down
+(global-set-key (kbd "C-< <left>") 'windmove-left); move left
+(global-set-key (kbd "C-< <right>") 'windmove-right); move right
+
 
 ;; setup MELPA
 (require 'package)
@@ -82,25 +90,13 @@ cancel the use of the current buffer (for special-purpose buffers)."
 
 (set-face-attribute 'default nil :font "FiraCode NF" :height 120)
 
-(use-package nord-theme)
-(load-theme 'nord t)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("37768a79b479684b0756dec7c0fc7652082910c37d8863c35b702db3f16000f8" default))
- '(package-selected-packages
-   '(lsp-jedi lsp-python-ms pippel visual-fill-column org-bullets org-mode lsp-mode helm which-key rainbow-delimiters doom-modeline use-package nord-theme ivy command-log-mode)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
+(use-package doom-themes
+  :ensure t
+  :config
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-vibrant t))
+  
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1))
@@ -121,6 +117,7 @@ cancel the use of the current buffer (for special-purpose buffers)."
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.3))
+
 
 ;; Developpement
 
@@ -165,3 +162,17 @@ cancel the use of the current buffer (for special-purpose buffers)."
 
 (use-package visual-fill-column
   :hook (org-mode . efs/org-mode-visual-fill))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(doom-themes which-key visual-fill-column use-package rainbow-delimiters pippel org-bullets nord-theme lsp-jedi doom-modeline))
+ '(vc-follow-symlinks t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
