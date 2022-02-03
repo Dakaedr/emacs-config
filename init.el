@@ -120,23 +120,32 @@ cancel the use of the current buffer (for special-purpose buffers)."
 
 ;; Developpement
 
-(use-package pippel)
 (use-package lsp-mode
-  :commands (lsp lsp-deferred)
   :init
-  (setq lsp-keymap-prefix "C-c l")
+  (setq lsp-keymap-prefix "C-l")
+  :hook ((python-mode . lsp))
   :config
   (lsp-enable-which-key-integration t))
-
-(use-package lsp-jedi
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode))
+(use-package python-mode
   :ensure t
-  :config
-  (with-eval-after-load "lsp-mode"
-    (add-to-list 'lsp-disabled-clients 'pyls)
-    (add-to-list 'lsp-enabled-clients 'jedi)))
+  :hook (python-mode . lsp-deferred))
 
+(use-package lsp-pyright
+  :ensure t
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp-deferred))))  ; or lsp-deferred
+(use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind (:map company-active-map
+	      ("<tab>" . company-complete-selection))
+  :custom
+  (company-minimum-prefix-lenght 1)
+  (company-idle-delay 0.0))
 ;; org setup
-
 (defun dw/org-mode-setup ()
   (org-indent-mode)
   (auto-fill-mode 0)
@@ -167,7 +176,8 @@ cancel the use of the current buffer (for special-purpose buffers)."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(doom-themes which-key visual-fill-column use-package rainbow-delimiters pippel org-bullets nord-theme lsp-jedi doom-modeline))
+   '(lsp-ui company doom-themes which-key visual-fill-column use-package rainbow-delimiters pippel org-bullets nord-theme lsp-jedi doom-modeline))
+ '(python-shell-interpreter "python3")
  '(vc-follow-symlinks t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
