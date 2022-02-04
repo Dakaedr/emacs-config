@@ -201,6 +201,9 @@ cancel the use of the current buffer (for special-purpose buffers)."
 
 (use-package visual-fill-column
   :hook (org-mode . efs/org-mode-visual-fill))
+#+end_src
+* Config added by Custom
+#+begin_src emacs-lisp
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
