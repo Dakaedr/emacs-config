@@ -125,9 +125,9 @@ cancel the use of the current buffer (for special-purpose buffers)."
   :config
   (setq which-key-idle-delay 0.3))
 #+end_src
-* Developpement configuration
+* IDE configuration
 #+begin_src emacs-lisp
-;; Developpement
+;; IDE for python
 
 (use-package lsp-mode
   :init
