@@ -1,3 +1,8 @@
+#+title Emacs configuration
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init-new.el 
+* Basic UI Configuration
+#+begin_src emacs-lisp 
+
 ;; Remove some stuff from UI & Startup
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -6,7 +11,9 @@
 (menu-bar-mode -1)
 (setq visible-bell t)
 (setq inhibit-startup-message -1)
-
+#+end_src
+* Keyboard shortcut & special functions
+#+begin_src emacs-lisp
 ;;##############################################
 ;;  special function  
 ;;##############################################
@@ -61,8 +68,9 @@ cancel the use of the current buffer (for special-purpose buffers)."
 (global-set-key (kbd "C-< <down>") 'windmove-down); move down
 (global-set-key (kbd "C-< <left>") 'windmove-left); move left
 (global-set-key (kbd "C-< <right>") 'windmove-right); move right
-
-
+#+end_src
+* Configure MELPA
+#+begin_src emacs-lisp
 ;; setup MELPA
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -78,12 +86,9 @@ cancel the use of the current buffer (for special-purpose buffers)."
 
 (require 'use-package)
 (setq use-package-always-ensure t)
-
-
-;; setup helm
-;;(use-package helm)
-
-
+#+end_src
+* Configure font & theme
+#+begin_src emacs-lisp
 ;;change font & theme
 (use-package all-the-icons
   :if (display-graphic-p))
@@ -100,7 +105,9 @@ cancel the use of the current buffer (for special-purpose buffers)."
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1))
-
+#+end_src
+* Emacs behavior config
+#+begin_src emacs-lisp
 ;; Some useful editor config
 (column-number-mode)
 (global-display-line-numbers-mode t)
@@ -117,7 +124,9 @@ cancel the use of the current buffer (for special-purpose buffers)."
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.3))
-
+#+end_src
+* Developpement configuration
+#+begin_src emacs-lisp
 ;; Developpement
 
 (use-package lsp-mode
@@ -145,6 +154,9 @@ cancel the use of the current buffer (for special-purpose buffers)."
   :custom
   (company-minimum-prefix-lenght 1)
   (company-idle-delay 0.0))
+#+end_src
+* Org mode
+#+begin_src emacs-lisp
 ;; org setup
 (defun dw/org-mode-setup ()
   (org-indent-mode)
@@ -204,3 +216,4 @@ cancel the use of the current buffer (for special-purpose buffers)."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+#+end_src
