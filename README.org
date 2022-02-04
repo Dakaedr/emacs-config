@@ -4,8 +4,7 @@
 * Getting started
 Welcome to my emacs config !
 
-Everything is managed through babel in this file.
-And the init.el can be generated with M-x<ret>org-babel-tangle<ret>
+Everything is managed through babel in this file. The init.el can be generated with M-x<ret>org-babel-tangle<ret>
 
 Rise an issue if you get a problem with it, i'll try to help whenever I'm free !
 
