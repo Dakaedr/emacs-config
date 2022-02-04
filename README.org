@@ -1,5 +1,5 @@
 #+title Emacs configuration
-#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init-new.el 
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el 
 * Basic UI Configuration
 #+begin_src emacs-lisp 
 
@@ -214,7 +214,7 @@ cancel the use of the current buffer (for special-purpose buffers)."
                      (expand-file-name "~/.emacs.d/org/Readme.org"))
 ;; Dynamic scoping
    (let ((org-confirm-babel-evaluate nil))
-     (org-babel-tangle)))
+     (org-babel-tangle))))
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
 
 #+end_src
