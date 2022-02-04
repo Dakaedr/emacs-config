@@ -1,8 +1,36 @@
 #+title Emacs configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el 
-* Basic UI Configuration
-#+begin_src emacs-lisp 
 
+* Getting started
+Welcome to my emacs config !
+
+Everything is managed through babel in this file.
+And the init.el can be generated with M-x<ret>org-babel-tangle<ret>
+
+Good luck & have fun with emacs !
+P.S: Rise an issue if you get a problem with it, i'll try to help whenever I'm free !
+
+* Configure MELPA
+#+begin_src emacs-lisp
+;; setup MELPA
+(require 'package)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+			 ("org" . "https://orgmode.elpa/")
+			 ("elpa" . "https://elpa.gnu.org/packages/")))
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+
+;; Initialize use-package on non-linux platforms
+(unless (package-installed-p 'use-package)
+ (package-install 'use-package))
+
+(require 'use-package)
+(setq use-package-always-ensure t)
+#+end_src
+* Basic UI Configuration
+
+#+begin_src emacs-lisp 
 ;; Remove some stuff from UI & Startup
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -12,7 +40,9 @@
 (setq visible-bell t)
 (setq inhibit-startup-message -1)
 #+end_src
+
 * Keyboard shortcut & special functions
+
 #+begin_src emacs-lisp
 ;;##############################################
 ;;  special function  
@@ -52,7 +82,10 @@ cancel the use of the current buffer (for special-purpose buffers)."
   "Open my daily todolist."
   (interactive)
   (find-file "~/.emacs.d/org/todo.org"))
-
+(defun open-org-readme ()
+  "Open my Readme.org used to generate my init.el with Babel"
+  (interactive)
+  (find-file "~/.emacs.d/org/Readme.org"))
 
 ;;custom shorcut
 (global-set-key (kbd "<escape>") 'keyboard-escape-buffer-magic) ; Use escape instead of C-g
@@ -61,6 +94,8 @@ cancel the use of the current buffer (for special-purpose buffers)."
 (global-set-key (kbd "C-o d") 'open-org-dir) ; Open my org file dir
 (global-set-key (kbd "C-o f") 'open-init-file) ; Open my init.el
 (global-set-key (kbd "C-o t") 'open-org-todo) ; Open my todolist
+(global-set-key (kbd "C-o r") 'open-org-readme) ; Open my Readme.org
+(global-set-key (kbd "C-o b") 'org-babel-tangle) ; Execute babel tangle
 
 (define-prefix-command 'move-short) ; Generate a command for prefix 
 (global-set-key (kbd "C-<") 'move-short) ; Assign C-< as prefix 
@@ -68,24 +103,6 @@ cancel the use of the current buffer (for special-purpose buffers)."
 (global-set-key (kbd "C-< <down>") 'windmove-down); move down
 (global-set-key (kbd "C-< <left>") 'windmove-left); move left
 (global-set-key (kbd "C-< <right>") 'windmove-right); move right
-#+end_src
-* Configure MELPA
-#+begin_src emacs-lisp
-;; setup MELPA
-(require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("org" . "https://orgmode.elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
-
-;; Initialize use-package on non-linux platforms
-(unless (package-installed-p 'use-package)
- (package-install 'use-package))
-
-(require 'use-package)
-(setq use-package-always-ensure t)
 #+end_src
 * Configure font & theme
 #+begin_src emacs-lisp
@@ -100,7 +117,8 @@ cancel the use of the current buffer (for special-purpose buffers)."
   :config
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-vibrant t))
+  (load-theme 'doom-Iosvkem t)
+(doom-themes-org-config))
   
 (use-package doom-modeline
   :ensure t
@@ -159,14 +177,13 @@ cancel the use of the current buffer (for special-purpose buffers)."
 ** org & org-bullet setup
 #+begin_src emacs-lisp
 ;; org setup
-(defun dw/org-mode-setup ()
+(defun org-mode-setup ()
   (org-indent-mode)
   (auto-fill-mode 0)
-  (visual-line-mode 1)
-  (setq evil-auto-indent nil))
+  (visual-line-mode 1))
 
 (use-package org
-  :hook (org-mode . dw/org-mode-setup)
+  :hook (org-mode . org-mode-setup)
   :config
   (setq org-ellipsis " "
 	org-hide-emphasis-markers t)
@@ -176,7 +193,8 @@ cancel the use of the current buffer (for special-purpose buffers)."
   (setq org-log-into-drawer t)
   (setq org-todo-keywords
 	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-	  (sequence "BACKLOG(b)" "READY(r)" "REVIEW(v)" "HOLD(h)" "|" "COMPLETED(c)" "CANCELED(k)"))))
+	  (sequence "BACKLOG(b)" "READY(r)" "REVIEW(v)" "HOLD(h)" "|" "COMPLETED(c)"
+          "CANCELED(k)"))))
 
 (use-package org-bullets
   :after org
@@ -184,13 +202,13 @@ cancel the use of the current buffer (for special-purpose buffers)."
   :custom
   (org-bullets-bullet-list '("\u200b")))
 
-(defun efs/org-mode-visual-fill ()
+(defun org-mode-visual-fill ()
   (setq visual-fill-column-width 100
 	visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
 (use-package visual-fill-column
-  :hook (org-mode . efs/org-mode-visual-fill))
+  :hook (org-mode . org-mode-visual-fill))
 #+end_src
 ** Org-babel
 #+begin_src emacs-lisp
@@ -209,16 +227,18 @@ cancel the use of the current buffer (for special-purpose buffers)."
 ** Auto-tangle Configuration file
 #+begin_src emacs-lisp
 ;; Automatically tangle Readme.org config file when we save it
-(defun efs/org-babel-tangle-config ()
+(defun org-babel-tangle-config ()
  (when (string-equal (buffer-file-name)
                      (expand-file-name "~/.emacs.d/org/Readme.org"))
 ;; Dynamic scoping
    (let ((org-confirm-babel-evaluate nil))
      (org-babel-tangle))))
-(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 
 #+end_src
+
 * Config added by Custom
+
 #+begin_src emacs-lisp
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
