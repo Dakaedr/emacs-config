@@ -156,6 +156,7 @@ cancel the use of the current buffer (for special-purpose buffers)."
   (company-idle-delay 0.0))
 #+end_src
 * Org mode
+** org & org-bullet setup
 #+begin_src emacs-lisp
 ;; org setup
 (defun dw/org-mode-setup ()
@@ -177,17 +178,6 @@ cancel the use of the current buffer (for special-purpose buffers)."
 	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
 	  (sequence "BACKLOG(b)" "READY(r)" "REVIEW(v)" "HOLD(h)" "|" "COMPLETED(c)" "CANCELED(k)"))))
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (python . t)))
-(setq org-confirm-babel-evaluate nil)
-
-(require 'org-tempo)
-(add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-(add-to-list 'org-structure-template-alist '("py" . "src python"))
-
 (use-package org-bullets
   :after org
   :hook (org-mode . org-bullets-mode)
@@ -201,6 +191,32 @@ cancel the use of the current buffer (for special-purpose buffers)."
 
 (use-package visual-fill-column
   :hook (org-mode . efs/org-mode-visual-fill))
+#+end_src
+** Org-babel
+#+begin_src emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (python . t)))
+(setq org-confirm-babel-evaluate nil)
+
+(require 'org-tempo)
+(add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("py" . "src python"))
+
+#+end_src
+** Auto-tangle Configuration file
+#+begin_src emacs-lisp
+;; Automatically tangle Readme.org config file when we save it
+(defun efs/org-babel-tangle-config ()
+ (when (string-equal (buffer-file-name)
+                     (expand-file-name "~/.emacs.d/org/Readme.org"))
+;; Dynamic scoping
+   (let ((org-confirm-babel-evaluate nil))
+     (org-babel-tangle)))
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+
 #+end_src
 * Config added by Custom
 #+begin_src emacs-lisp
