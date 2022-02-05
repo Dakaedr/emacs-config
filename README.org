@@ -10,6 +10,16 @@ Rise an issue if you get a problem with it, i'll try to help whenever I'm free !
 
 Good luck & have fun with emacs !
 
+* Requirement
+- For Vterm (linux Only)
+  - libtool
+  - libtool-bin
+  - cmake
+  - make
+- For pyright 
+  - python3
+
+and obviously GNU Emacs !
 * Configure MELPA
 #+begin_src emacs-lisp
 ;; setup MELPA
@@ -96,6 +106,8 @@ cancel the use of the current buffer (for special-purpose buffers)."
 (global-set-key (kbd "C-o t") 'open-org-todo) ; Open my todolist
 (global-set-key (kbd "C-o r") 'open-org-readme) ; Open my Readme.org
 (global-set-key (kbd "C-o b") 'org-babel-tangle) ; Execute babel tangle
+(global-set-key (kbd "C-o v") 'vterm) ; Execute vterm (linux only)
+(global-set-key (kbd "C-o e") 'eshell) ; Execute eshell (multi platform shell)
 
 (define-prefix-command 'move-short) ; Generate a command for prefix 
 (global-set-key (kbd "C-<") 'move-short) ; Assign C-< as prefix 
@@ -130,8 +142,9 @@ cancel the use of the current buffer (for special-purpose buffers)."
 (column-number-mode)
 (global-display-line-numbers-mode t)
 (dolist (mode '(org-mode-hook
-		term-mode-hook
-		eshell-mode-hook))
+		  term-mode-hook
+		  eshell-mode-hook
+                vterm-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (use-package rainbow-delimiters
@@ -236,7 +249,29 @@ cancel the use of the current buffer (for special-purpose buffers)."
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 
 #+end_src
+* Terminals
+For terminal integration in emacs I recommends this [[https://www.youtube.com/watch?v=wa_wZIuT9Vw][video from System Crafters]].
+My configs below are barebones though sufficient for my use case.
 
+** vterm
+#+begin_src emacs-lisp
+(use-package vterm
+ :commands vterm
+ :config 
+ (setq vterm-max-scrollback 10000))
+#+end_src
+
+** eshell
+#+begin_src emacs-lisp
+(use-package eshell-git-prompt)
+(use-package eshell
+  :config
+  (eshell-git-prompt-use-theme 'powerline)
+  (setq eshell-history-size         10000
+        eshell-buffer-maximum-lines 10000
+        eshell-hist-ignoredups t
+        eshell-scroll-to-bottom-on-input t))
+#+end_src
 * Config added by Custom
 
 #+begin_src emacs-lisp
