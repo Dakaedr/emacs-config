@@ -25,8 +25,7 @@ and obviously GNU Emacs !
 ;; setup MELPA
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("org" . "https://orgmode.elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
+			   ("elpa" . "https://elpa.gnu.org/packages/")))
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
@@ -38,8 +37,8 @@ and obviously GNU Emacs !
 (require 'use-package)
 (setq use-package-always-ensure t)
 #+end_src
-* Basic UI Configuration
-
+* UI Configuration
+** Basic UI
 #+begin_src emacs-lisp 
 ;; Remove some stuff from UI & Startup
 (scroll-bar-mode -1)
@@ -51,72 +50,7 @@ and obviously GNU Emacs !
 (setq inhibit-startup-message -1)
 #+end_src
 
-* Keyboard shortcut & special functions
-
-#+begin_src emacs-lisp
-;;##############################################
-;;  special function  
-;;##############################################
-(defun keyboard-escape-buffer-magic ()
-  "Exit the current \"mode\" (in a generalized sense of the word).
-This command can exit an interactive command such as `query-replace',
-can clear out a prefix argument or a region,
-can get out of the minibuffer or other recursive edit,
-cancel the use of the current buffer (for special-purpose buffers)."
-  (interactive)
-  (cond ((eq last-command 'mode-exited) nil)
-	((region-active-p)
-	 (deactivate-mark))
-	((> (minibuffer-depth) 0)
-	 (abort-recursive-edit))
-	(current-prefix-arg
-	 nil)
-	((> (recursion-depth) 0)
-	 (exit-recursive-edit))
-	(buffer-quit-function
-	 (funcall buffer-quit-function))
-	((string-match "^ \\*" (buffer-name (current-buffer)))
-	 (bury-buffer))))
-
-
-;; init.el find function
-(defun open-init-file ()
-  "Open the init file."
-  (interactive)
-  (find-file user-init-file))
-(defun open-org-dir ()
-  "Open the org directory in dired."
-  (interactive)
-  (dired "~/.emacs.d/org/"))
-(defun open-org-todo ()
-  "Open my daily todolist."
-  (interactive)
-  (find-file "~/.emacs.d/org/todo.org"))
-(defun open-org-readme ()
-  "Open my Readme.org used to generate my init.el with Babel"
-  (interactive)
-  (find-file "~/.emacs.d/org/Readme.org"))
-
-;;custom shorcut
-(global-set-key (kbd "<escape>") 'keyboard-escape-buffer-magic) ; Use escape instead of C-g
-(define-prefix-command 'open-short) ; Generate a command for prefix 
-(global-set-key (kbd "C-o") 'open-short) ; Assign C-o as prefix 
-(global-set-key (kbd "C-o d") 'open-org-dir) ; Open my org file dir
-(global-set-key (kbd "C-o f") 'open-init-file) ; Open my init.el
-(global-set-key (kbd "C-o t") 'open-org-todo) ; Open my todolist
-(global-set-key (kbd "C-o r") 'open-org-readme) ; Open my Readme.org
-(global-set-key (kbd "C-o b") 'org-babel-tangle) ; Execute babel tangle
-(global-set-key (kbd "C-o v") 'vterm) ; Execute vterm (linux only)
-(global-set-key (kbd "C-o e") 'eshell) ; Execute eshell (multi platform shell)
-
-(define-prefix-command 'move-short) ; Generate a command for prefix 
-(global-set-key (kbd "C-<") 'move-short) ; Assign C-< as prefix 
-(global-set-key (kbd "C-< <up>") 'windmove-up); move up
-(global-set-key (kbd "C-< <down>") 'windmove-down); move down
-(global-set-key (kbd "C-< <left>") 'windmove-left); move left
-(global-set-key (kbd "C-< <right>") 'windmove-right); move right
-#+end_src
-* Configure font & theme
+** Configure font & theme
 #+begin_src emacs-lisp
 ;;change font & theme
 (use-package all-the-icons
@@ -136,25 +70,100 @@ cancel the use of the current buffer (for special-purpose buffers)."
   :ensure t
   :init (doom-modeline-mode 1))
 #+end_src
-* Emacs behavior config
+* Emacs Behavior
+
+** special functions
+
 #+begin_src emacs-lisp
-;; Some useful editor config
-(column-number-mode)
-(global-display-line-numbers-mode t)
-(dolist (mode '(org-mode-hook
-		  term-mode-hook
-		  eshell-mode-hook
-                vterm-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+  ;;##############################################
+  ;;  special function  
+  ;;##############################################
+  (defun keyboard-escape-buffer-magic ()
+    "Exit the current \"mode\" (in a generalized sense of the word).
+  This command can exit an interactive command such as `query-replace',
+  can clear out a prefix argument or a region,
+  can get out of the minibuffer or other recursive edit,
+  cancel the use of the current buffer (for special-purpose buffers)."
+    (interactive)
+    (cond ((eq last-command 'mode-exited) nil)
+          ((region-active-p)
+           (deactivate-mark))
+          ((> (minibuffer-depth) 0)
+           (abort-recursive-edit))
+          (current-prefix-arg
+           nil)
+          ((> (recursion-depth) 0)
+           (exit-recursive-edit))
+          (buffer-quit-function
+           (funcall buffer-quit-function))
+          ((string-match "^ \\*" (buffer-name (current-buffer)))
+           (bury-buffer))))
 
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
 
-(use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 0.3))
+  ;; init.el find function
+  (defun open-init-file ()
+    "Open the init file."
+    (interactive)
+    (find-file user-init-file))
+  (defun open-org-dir ()
+    "Open the org directory in dired."
+    (interactive)
+    (dired "~/.emacs.d/org/"))
+  (defun open-org-todo ()
+    "Open my daily todolist."
+    (interactive)
+    (find-file "~/.emacs.d/org/todo.org"))
+  (defun open-org-readme ()
+    "Open my Readme.org used to generate my init.el with Babel"
+    (interactive)
+    (find-file "~/.emacs.d/org/Readme.org"))
+
+#+end_src
+
+** Special shortcut
+#+begin_src emacs-lisp
+
+  ;;custom shorcut
+
+    (global-set-key (kbd "<escape>") 'keyboard-escape-buffer-magic) ; Use escape instead of C-g
+    (define-prefix-command 'open-short) ; Generate a command for prefix 
+    (global-set-key (kbd "C-o") 'open-short) ; Assign C-o as prefix 
+    (global-set-key (kbd "C-o d") 'open-org-dir) ; Open my org file dir
+    (global-set-key (kbd "C-o f") 'open-init-file) ; Open my init.el
+    (global-set-key (kbd "C-o t") 'open-org-todo) ; Open my todolist
+    (global-set-key (kbd "C-o r") 'open-org-readme) ; Open my Readme.org
+    (global-set-key (kbd "C-o b") 'org-babel-tangle) ; Execute babel tangle
+    (global-set-key (kbd "C-o v") 'vterm) ; Execute vterm (linux only)
+    (global-set-key (kbd "C-o e") 'eshell) ; Execute eshell (multi platform shell)
+
+    (define-prefix-command 'move-short) ; Generate a command for prefix 
+    (global-set-key (kbd "C-<") 'move-short) ; Assign C-< as prefix 
+    (global-set-key (kbd "C-< <up>") 'windmove-up); move up
+    (global-set-key (kbd "C-< <down>") 'windmove-down); move down
+    (global-set-key (kbd "C-< <left>") 'windmove-left); move left
+    (global-set-key (kbd "C-< <right>") 'windmove-right); move right
+    (global-set-key (kbd "C-< C-<") 'next-multiframe-window); cycle through all window across all frame
+
+#+end_src
+** Useful config
+#+begin_src emacs-lisp
+     ;; Some useful editor config
+     (column-number-mode)
+     (global-display-line-numbers-mode t)
+     (dolist (mode '(org-mode-hook
+		       term-mode-hook
+		       eshell-mode-hook
+		     vterm-mode-hook))
+       (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+     (use-package rainbow-delimiters
+       :hook (prog-mode . rainbow-delimiters-mode))
+
+     (use-package which-key
+       :init (which-key-mode)
+       :diminish which-key-mode
+       :config
+       (setq which-key-idle-delay 0.3))
 #+end_src
 * IDE configuration
 #+begin_src emacs-lisp
@@ -216,7 +225,7 @@ cancel the use of the current buffer (for special-purpose buffers)."
   (org-bullets-bullet-list '("\u200b")))
 
 (defun org-mode-visual-fill ()
-  (setq visual-fill-column-width 100
+  (setq visual-fill-column-width 120
 	visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
