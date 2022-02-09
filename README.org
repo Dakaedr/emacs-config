@@ -56,7 +56,7 @@ and obviously GNU Emacs !
 (use-package all-the-icons
   :if (display-graphic-p))
 
-(set-face-attribute 'default nil :font "FiraCode NF" :height 120)
+(set-face-attribute 'default nil :font "FiraCode NF" :height 125)
 
 (use-package doom-themes
   :ensure t
@@ -214,7 +214,7 @@ and obviously GNU Emacs !
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
   (setq org-todo-keywords
-	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+	'((sequence "TODO(t)" "ONGOING(o)" "|" "DONE(d!)")
 	  (sequence "BACKLOG(b)" "READY(r)" "REVIEW(v)" "HOLD(h)" "|" "COMPLETED(c)"
           "CANCELED(k)"))))
 
