@@ -183,6 +183,8 @@ and obviously GNU Emacs !
     :diminish which-key-mode
     :config
     (setq which-key-idle-delay 0.3))
+(setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "~/.cargo/bin")))
+(setq exec-path (append exec-path (list (expand-file-name "~/.cargo/bin"))))
 #+end_src
 * IDE configuration
 ** Python
@@ -193,6 +195,9 @@ and obviously GNU Emacs !
   :init
   (setq lsp-keymap-prefix "C-l")
   :hook ((python-mode . lsp))
+  :custom
+  (lsp-rust-analyzer-cargo-watch-command "clippy")
+  (lsp-rust-analyzer-server-display-inlay-hints t)
   :config
   (lsp-enable-which-key-integration t))
 (use-package lsp-ui
@@ -221,7 +226,34 @@ and obviously GNU Emacs !
 #+end_src
 ** Rust
 #+begin_src emacs-lisp
-(use-package rust-mode)
+(use-package rustic
+  :ensure
+  :bind (:map rustic-mode-map
+              ("M-j" . lsp-ui-imenu)
+              ("M-?" . lsp-find-references)
+              ("C-c C-c l" . flycheck-list-errors)
+              ("C-c C-c a" . lsp-execute-code-action)
+              ("C-c C-c r" . lsp-rename)
+              ("C-c C-c q" . lsp-workspace-restart)
+              ("C-c C-c Q" . lsp-workspace-shutdown)
+              ("C-c C-c s" . lsp-rust-analyzer-status))
+  :config
+  ;; uncomment for less flashiness
+  ;; (setq lsp-eldoc-hook nil)
+  ;; (setq lsp-enable-symbol-highlighting nil)
+  ;; (setq lsp-signature-auto-activate nil)
+
+  ;; comment to disable rustfmt on save
+  (setq rustic-format-on-save t)
+  (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
+
+(defun rk/rustic-mode-hook ()
+  ;; so that run C-c C-c C-r works without having to confirm, but don't try to
+  ;; save rust buffers that are not file visiting. Once
+  ;; https://github.com/brotzeit/rustic/issues/253 has been resolved this should
+  ;; no longer be necessary.
+  (when buffer-file-name
+    (setq-local buffer-save-without-query t)))
 #+end_src
 * Org mode
 ** org & org-bullet setup
@@ -285,11 +317,54 @@ and obviously GNU Emacs !
      (org-babel-tangle))))
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 
+#+end_src 
+* Emacs Application Framework
+** Install dependencies manually
+
+git clone --depth=1 -b master https://github.com/emacs-eaf/emacs-application-framework.git ~/.emacs.d/site-lisp/emacs-application-framework/
+cd emacs-application-framework
+chmod +x ./install-eaf.py
+./install-eaf.py
+** Load EAF
+#+begin_src emacs-lisp
+(use-package eaf
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+  :custom
+  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  (eaf-browser-continue-where-left-off t)
+  (eaf-browser-enable-adblocker t)
+  (browse-url-browser-function 'eaf-open-browser)
+  :config
+  (defalias 'browse-web #'eaf-open-browser)
+  (with-eval-after-load
+  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  (eaf-bind-key nil "M-q" eaf-browser-keybinding))) ;; unbind, see more in the Wiki
+#+end_src
+
+** Loading App
+#+begin_src emacs-lisp
+(require 'eaf-system-monitor)
+(require 'eaf-terminal)
+(require 'eaf-markdown-previewer)
+(require 'eaf-file-sender)
+(require 'eaf-music-player)
+(require 'eaf-mindmap)
+(require 'eaf-airshare)
+(require 'eaf-org-previewer)
+(require 'eaf-camera)
+(require 'eaf-browser)
+(require 'eaf-video-player)
+(require 'eaf-image-viewer)
+(require 'eaf-pdf-viewer)
+(require 'eaf-file-browser)
+(require 'eaf-rss-reader)
+(require 'eaf-file-manager)
 #+end_src
 * Terminals
 For terminal integration in emacs I recommends this [[https://www.youtube.com/watch?v=wa_wZIuT9Vw][video from System Crafters]].
 My configs below are barebones though sufficient for my use case.
-
 ** vterm
 #+begin_src emacs-lisp
 (use-package vterm
@@ -308,7 +383,7 @@ My configs below are barebones though sufficient for my use case.
         eshell-buffer-maximum-lines 10000
         eshell-hist-ignoredups t
         eshell-scroll-to-bottom-on-input t))
-#+end_src
+        #+end_src
 * Config added by Custom
 
 #+begin_src emacs-lisp
