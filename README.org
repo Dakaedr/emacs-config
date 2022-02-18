@@ -219,6 +219,10 @@ and obviously GNU Emacs !
 #+begin_src emacs-lisp
 (use-package hcl-mode)
 #+end_src
+** Rust
+#+begin_src emacs-lisp
+(use-package rust-mode)
+#+end_src
 * Org mode
 ** org & org-bullet setup
 #+begin_src emacs-lisp
