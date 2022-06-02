@@ -19,7 +19,7 @@ Good luck & have fun with emacs !
 - For pyright 
   - python3
 
-and obviously GNU Emacs !
+and obviously GNU 
 * Configure MELPA
 #+begin_src emacs-lisp
 ;; setup MELPA
@@ -56,8 +56,6 @@ and obviously GNU Emacs !
 (use-package all-the-icons
   :if (display-graphic-p))
 
-(set-face-attribute 'default nil :font "FiraCode NF" :height 125)
-
 (use-package doom-themes
   :ensure t
   :config
@@ -70,6 +68,7 @@ and obviously GNU Emacs !
   :ensure t
   :init (doom-modeline-mode 1))
 #+end_src
+
 * Emacs Behavior
 
 ** special functions
@@ -151,7 +150,13 @@ and obviously GNU Emacs !
     (global-set-key (kbd "C-o e") 'eshell) ; Execute eshell (multi platform shell)
     (global-set-key (kbd "C-o w") 'open-wsl-dired) ; Open dired in my wsl home dir
 
+    (define-prefix-command 'open-roam) ; Generate a command for prefix
+    (global-set-key (kbd "C-o C-r") 'open-roam) ; Assign C-o C-r as prefix
+    (global-set-key (kbd "C-o C-r i") 'org-roam-node-insert); Insert an org-roam note
+    (global-set-key (kbd "C-o C-r f") 'org-roam-node-find); Find or create an org-roam note
+    (global-set-key (kbd "C-o C-r c") 'org-roam-capture); Create an org-roam note if it does not exist, and restores the current window configuration upon completion.
 
+  
     (define-prefix-command 'move-short) ; Generate a command for prefix 
     (global-set-key (kbd "C-<") 'move-short) ; Assign C-< as prefix 
     (global-set-key (kbd "C-< <up>") 'windmove-up); move up
@@ -256,6 +261,14 @@ and obviously GNU Emacs !
     (setq-local buffer-save-without-query t)))
 #+end_src
 * Org mode
+** Org-Roam
+#+begin_src emacs-lisp
+  (use-package org-roam
+    :ensure t)
+(setq org-roam-directory (file-truename "~/org-roam"))
+(setq find-file-visit-truename t)
+(org-roam-db-autosync-mode)
+#+end_src
 ** org & org-bullet setup
 #+begin_src emacs-lisp
 ;; org setup
@@ -327,40 +340,40 @@ chmod +x ./install-eaf.py
 ./install-eaf.py
 ** Load EAF
 #+begin_src emacs-lisp
-(use-package eaf
-  :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
-  :custom
-  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
-  (eaf-browser-continue-where-left-off t)
-  (eaf-browser-enable-adblocker t)
-  (browse-url-browser-function 'eaf-open-browser)
-  :config
-  (defalias 'browse-web #'eaf-open-browser)
-  (with-eval-after-load
-  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key take_photo "p" eaf-camera-keybinding)
-  (eaf-bind-key nil "M-q" eaf-browser-keybinding))) ;; unbind, see more in the Wiki
+;(use-package eaf
+;  :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+;  :custom
+; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+;  (eaf-browser-continue-where-left-off t)
+;  (eaf-browser-enable-adblocker t)
+;  (browse-url-browser-function 'eaf-open-browser)
+;  :config
+;  (defalias 'browse-web #'eaf-open-browser)
+;  (with-eval-after-load
+;  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+;  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+;  (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+;  (eaf-bind-key nil "M-q" eaf-browser-keybinding))) ;; unbind, see more in the Wiki
 #+end_src
 
 ** Loading App
 #+begin_src emacs-lisp
-(require 'eaf-system-monitor)
-(require 'eaf-terminal)
-(require 'eaf-markdown-previewer)
-(require 'eaf-file-sender)
-(require 'eaf-music-player)
-(require 'eaf-mindmap)
-(require 'eaf-airshare)
-(require 'eaf-org-previewer)
-(require 'eaf-camera)
-(require 'eaf-browser)
-(require 'eaf-video-player)
-(require 'eaf-image-viewer)
-(require 'eaf-pdf-viewer)
-(require 'eaf-file-browser)
-(require 'eaf-rss-reader)
-(require 'eaf-file-manager)
+;(require 'eaf-system-monitor)
+;(require 'eaf-terminal)
+;(require 'eaf-markdown-previewer)
+;(require 'eaf-file-sender)
+;(require 'eaf-music-player)
+;(require 'eaf-mindmap)
+;(require 'eaf-airshare)
+;(require 'eaf-org-previewer)
+;(require 'eaf-camera)
+;(require 'eaf-browser)
+;(require 'eaf-video-player)
+;(require 'eaf-image-viewer)
+;(require 'eaf-pdf-viewer)
+;(require 'eaf-file-browser)
+;(require 'eaf-rss-reader)
+;(require 'eaf-file-manager)
 #+end_src
 * Terminals
 For terminal integration in emacs I recommends this [[https://www.youtube.com/watch?v=wa_wZIuT9Vw][video from System Crafters]].
@@ -401,5 +414,5 @@ My configs below are barebones though sufficient for my use case.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#1b1d1e" :foreground "#dddddd" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "CTDB" :family "FiraCode Nerd Font Mono")))))
 #+end_src
