@@ -72,7 +72,6 @@ and obviously GNU
 * Emacs Behavior
 
 ** special functions
-
 #+begin_src emacs-lisp
     ;;##############################################
     ;;  special function  
@@ -190,6 +189,14 @@ and obviously GNU
     (setq which-key-idle-delay 0.3))
 (setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "~/.cargo/bin")))
 (setq exec-path (append exec-path (list (expand-file-name "~/.cargo/bin"))))
+#+end_src
+** Helm
+#+begin_src emacs-lisp
+  (use-package helm)
+  (global-set-key (kbd "M-x") #'helm-M-x)
+  (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+  (global-set-key (kbd "C-x C-f") #'helm-locate)
+  (helm-mode 1)
 #+end_src
 * IDE configuration
 ** Python
@@ -329,7 +336,6 @@ and obviously GNU
    (let ((org-confirm-babel-evaluate nil))
      (org-babel-tangle))))
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
-
 #+end_src 
 * Emacs Application Framework
 ** Install dependencies manually
@@ -391,7 +397,7 @@ My configs below are barebones though sufficient for my use case.
 (use-package eshell-git-prompt)
 (use-package eshell
   :config
-  (eshell-git-prompt-use-theme 'powerline)
+  (eshell-git-prompt-use-theme 'multiline2)
   (setq eshell-history-size         10000
         eshell-buffer-maximum-lines 10000
         eshell-hist-ignoredups t
