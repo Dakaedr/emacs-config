@@ -19,7 +19,7 @@ Good luck & have fun with emacs !
 - For pyright 
   - python3
 
-and obviously GNU 
+and obviously GNU emacs !
 * Configure MELPA
 #+begin_src emacs-lisp
 ;; setup MELPA
