@@ -222,8 +222,11 @@ and obviously GNU emacs !
 #+end_src
 ** Magit
 #+begin_src emacs-lisp
-(use-package magit)
+  (use-package magit)
+  (use-package forge
+  :after magit)
 #+end_src
+
 * IDE configuration
 ** Python
 #+begin_src emacs-lisp
